@@ -3,15 +3,18 @@ import requests
 import os
 from MyWooCommAPITest.src.configs.hosts_Configs import API_HOSTS
 from requests_oauthlib import OAuth1
+from MyWooCommAPITest.src.utilities.credentialsUtility import CredentialsUtility
 import json
 
 
 class requestUtility(object):
 
     def __init__(self):
+        wc_creds = CredentialsUtility.get_wc_api_keys() # could be directly called becuase of @staticmethod
         self.env = os.environ.get('ENV', 'test')
         self.base_url = API_HOSTS[self.env]
-        self.auth = OAuth1("ck_a29265ef5bc096bd7cec4266a7732ff63463521a","cs_4ac296939dcd86e2aef8b541b9f1c2ad8582a93b")
+        import pdb; pdb.set_trace()
+        self.auth = OAuth1(wc_creds['wc_key'],wc_creds['wc_secret'])
 
     def post(self, endpoint, payload=None, headers=None, expected_status_code=200):
         if not headers:
@@ -24,6 +27,7 @@ class requestUtility(object):
         f'Expected status code {expected_status_code} but actual {self.status_code}'
                 # while breaking a line use skip character '\'
         #import pdb; pdb.set_trace()
+
         return req_api.json()
 
     def get(self):
